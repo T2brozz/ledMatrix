@@ -24,7 +24,8 @@ async fn main()-> Result<(),()>
     options.set_hardware_mapping("adafruit-hat-pwm");
     options.set_cols(64);
     options.set_rows(64);
-    options.set_hardware_pulsing(false);
+    //options.set_hardware_pulsing(false);
+    options.set_led_rgb_sequence("BRG");
 
     let matrix = LedMatrix::new(Some(options), None).unwrap();
     let mut canvas = matrix.offscreen_canvas();
@@ -33,6 +34,7 @@ async fn main()-> Result<(),()>
             for blue in 0..255 {
                 canvas.fill(&LedColor { red, green, blue });
                 canvas = matrix.swap(canvas);
+
             }
         }
     }
