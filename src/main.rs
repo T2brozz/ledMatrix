@@ -1,6 +1,6 @@
 use crate::calender::get_calender;
 use crate::weather::{get_weather, ParseWeatherError};
-//use rpi_led_matrix::{LedMatrix, LedColor,LedMatrixOptions};
+use rpi_led_matrix::{LedMatrix, LedColor,LedMatrixOptions};
 
 mod weather;
 mod calender;
