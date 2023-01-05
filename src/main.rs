@@ -26,6 +26,7 @@ async fn main()-> Result<(),()>
     options.set_hardware_mapping("adafruit-hat-pwm");
     options.set_cols(64);
     options.set_rows(64);
+    options.set_pwm_dither_bits(1);
     //options.set_hardware_pulsing(false);
     options.set_led_rgb_sequence("BRG");
 
