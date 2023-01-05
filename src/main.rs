@@ -8,9 +8,11 @@ mod weather;
 mod calender;
 mod secrets;
 
+/*
 #[tokio::main]
 async fn main()-> Result<(),()>
-{
+*/
+fn main(){
     /*
         let weather =match get_weather().await{
             Ok(value)=> value,
@@ -43,6 +45,7 @@ async fn main()-> Result<(),()>
     }*/
     loop {
         canvas.fill(&LedColor { red: 127, green: 0, blue: 0 });
+        canvas = matrix.swap(canvas);
     }
-    Ok(())
+    //Ok(())
 }
