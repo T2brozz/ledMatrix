@@ -1,6 +1,8 @@
+//use std::{thread, time};
 use crate::calender::get_calender;
 use crate::weather::{get_weather, ParseWeatherError};
 use rpi_led_matrix::{LedMatrix, LedColor,LedMatrixOptions};
+use tokio::time::{sleep,Duration};
 
 mod weather;
 mod calender;
@@ -34,7 +36,7 @@ async fn main()-> Result<(),()>
             for blue in 0..255 {
                 canvas.fill(&LedColor { red, green, blue });
                 canvas = matrix.swap(canvas);
-
+                sleep(Duration::from_millis(10)).await;
             }
         }
     }
