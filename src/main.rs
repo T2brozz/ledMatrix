@@ -40,7 +40,9 @@ async fn main()-> Result<(),()>
             }
         }
     }*/
-    canvas.fill(&LedColor { red: 127, green: 0, blue: 0 });
-    canvas = matrix.swap(canvas);
+    loop {
+        canvas.fill(&LedColor { red: 127, green: 0, blue: 0 });
+        canvas = matrix.swap(canvas);
+    }
     Ok(())
 }
