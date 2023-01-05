@@ -31,7 +31,7 @@ async fn main()-> Result<(),()>
 
     let matrix = LedMatrix::new(Some(options), None).unwrap();
     let mut canvas = matrix.offscreen_canvas();
-    for red in 0..255 {
+    /*for red in 0..255 {
         for green in 0..255 {
             for blue in 0..255 {
                 canvas.fill(&LedColor { red, green, blue });
@@ -39,6 +39,8 @@ async fn main()-> Result<(),()>
                 sleep(Duration::from_millis(10)).await;
             }
         }
-    }
+    }*/
+    canvas.fill(&LedColor { 127, 3, 0 });
+    canvas = matrix.swap(canvas);
     Ok(())
 }
