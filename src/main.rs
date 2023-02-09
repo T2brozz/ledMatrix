@@ -39,7 +39,7 @@ fn main() {
         pi_chip:  None,
         pwm_bits: 11 ,
         pwm_lsb_nanoseconds: 130 ,
-        slowdown: None ,
+        slowdown: 2 ,
         interlaced: false ,
         dither_bits: 0 ,
         parallel: 1 ,
