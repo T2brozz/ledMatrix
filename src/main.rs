@@ -11,6 +11,7 @@ mod secrets;
 
 use std::io::Write;
 use image::codecs::png::CompressionType::Default;
+use serde::de::Unexpected::Option;
 
 fn scale_col(value: isize, low: isize, high: isize) -> u8 {
     if value < low {
@@ -34,17 +35,17 @@ fn main() {
         gpio_mapping: "adafruit-hat-pwm".to_owned(),
         rows: 64,
         cols: 64,
-        refresh_rate: Default::default() ,
-        pi_chip: Default::default(),
-        pwm_bits: Default::default(),
-        pwm_lsb_nanoseconds: Default::default(),
-        slowdown: Default::default(),
-        interlaced: Default::default(),
-        dither_bits: Default::default(),
-        parallel: Default::default(),
-        panel_type: Default::default(),
-        multiplexing: Default::default(),
-        row_setter: Default::default()
+        refresh_rate:  120 ,
+        pi_chip:  "BCM2711".to_owned(),
+        pwm_bits: 11 ,
+        pwm_lsb_nanoseconds: 130 ,
+        slowdown: 1  ,
+        interlaced: false ,
+        dither_bits: 0 ,
+        parallel: 1 ,
+        panel_type: "FM6126A".to_owned() ,
+        multiplexing:  "ABC".to_owned(),
+        row_setter:  String::from("DirectRowAddressSetter")
     };
     let rows = config.rows as isize;
     let cols = config.cols as isize;
