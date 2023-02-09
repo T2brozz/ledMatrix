@@ -32,7 +32,7 @@ fn rotate([x, y]: [isize; 2], angle: f64) -> [f64; 2] {
 
 fn main() {
     let config: RGBMatrixConfig= RGBMatrixConfig{
-        gpio_mapping:String::from("adafruit-hat-pwm"),
+        gpio_mapping:String::from("adafruit_hat_pwm"),
         rows: 64,
         cols: 64,
         refresh_rate:  120 ,
