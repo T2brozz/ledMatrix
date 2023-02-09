@@ -36,16 +36,16 @@ fn main() {
         rows: 64,
         cols: 64,
         refresh_rate:  120 ,
-        pi_chip:  "BCM2711".to_owned(),
+        pi_chip:  None,
         pwm_bits: 11 ,
         pwm_lsb_nanoseconds: 130 ,
-        slowdown: 1  ,
+        slowdown: None ,
         interlaced: false ,
         dither_bits: 0 ,
         parallel: 1 ,
-        panel_type: "FM6126A".to_owned() ,
-        multiplexing:  "ABC".to_owned(),
-        row_setter:  String::from("DirectRowAddressSetter")
+        panel_type: None ,
+        multiplexing: None,
+        row_setter: Some(  String::from("DirectRowAddressSetter"))
     };
     let rows = config.rows as isize;
     let cols = config.cols as isize;
