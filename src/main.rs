@@ -7,6 +7,8 @@ use tokio::time::{sleep,Duration};
 mod weather;
 mod calender;
 mod secrets;
+
+
 use std::io::Write;
 
 fn scale_col(value: isize, low: isize, high: isize) -> u8 {
@@ -27,7 +29,12 @@ fn rotate([x, y]: [isize; 2], angle: f64) -> [f64; 2] {
 }
 
 fn main() {
-    let config: RGBMatrixConfig = argh::from_env();
+    let config: RGBMatrixConfig= RGBMatrixConfig{
+        gpio_mapping: "adafruit-hat-pwm",
+        rows: 64,
+        cols: 64,
+
+    };
     let rows = config.rows as isize;
     let cols = config.cols as isize;
     let (mut matrix, mut canvas) = RGBMatrix::new(config, 0).expect("Matrix initialization failed");
