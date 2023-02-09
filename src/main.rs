@@ -45,7 +45,7 @@ fn main() {
         parallel: 1 ,
         panel_type: None ,
         multiplexing: None,
-        row_setter:   String::from("DirectRowAddressSetter")
+        row_setter:   String::from("ShiftRegisterRowAddressSetter")
     };
     let rows = config.rows as isize;
     let cols = config.cols as isize;
