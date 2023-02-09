@@ -33,7 +33,7 @@ fn main() {
         gpio_mapping: "adafruit-hat-pwm".to_owned(),
         rows: 64,
         cols: 64
-        ..
+
     };
     let rows = config.rows as isize;
     let cols = config.cols as isize;
