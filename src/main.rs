@@ -10,6 +10,7 @@ mod secrets;
 
 
 use std::io::Write;
+use image::codecs::png::CompressionType::Default;
 
 fn scale_col(value: isize, low: isize, high: isize) -> u8 {
     if value < low {
@@ -32,8 +33,18 @@ fn main() {
     let config: RGBMatrixConfig= RGBMatrixConfig{
         gpio_mapping: "adafruit-hat-pwm".to_owned(),
         rows: 64,
-        cols: 64
-
+        cols: 64,
+        refresh_rate: Default::default() ,
+        pi_chip: Default::default(),
+        pwm_bits: Default::default(),
+        pwm_lsb_nanoseconds: Default::default(),
+        slowdown: Default::default(),
+        interlaced: Default::default(),
+        dither_bits: Default::default(),
+        parallel: Default::default(),
+        panel_type: Default::default(),
+        multiplexing: Default::default(),
+        row_setter: Default::default()
     };
     let rows = config.rows as isize;
     let cols = config.cols as isize;
