@@ -45,7 +45,7 @@ fn main() {
         parallel: 1 ,
         panel_type: None ,
         multiplexing: None,
-        row_setter:   String::from("SM5266RowAddressSetter")
+        row_setter:   String::from("DirectRowAddressSetter")
     };
     let rows = config.rows as isize;
     let cols = config.cols as isize;
