@@ -11,6 +11,9 @@ Cargo.lock
 
 
 # Added by cargo
-.idea/
 /target
 /src/secrets.rs
+
+## idea
+/.idea
+/.idea/*
