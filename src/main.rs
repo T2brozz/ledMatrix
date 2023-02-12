@@ -11,6 +11,7 @@ use embedded_graphics::{
     text::{Alignment, Text},
     Drawable,
 };
+
 mod weather;
 mod calender;
 mod secrets;
@@ -60,7 +61,7 @@ fn main() {
 
     let text = Text::with_alignment(
         "Hello\nWorld",
-        Point::new(cols / 2, rows / 2),
+        Point::new((cols / 2) as i32, (rows / 2) as i32),
         MonoTextStyle::new(&FONT_6X10, Rgb888::WHITE),
         Alignment::Center,
     );
