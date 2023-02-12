@@ -69,7 +69,7 @@ fn main() {
         let time_str=time_now.format("%H\n%M\n%S").to_string();
         let text = Text::new(
             time_str.as_str(),
-            Point::new((0) as i32, (0) as i32),
+            Point::new((0) as i32, (5) as i32),
             text_style
         );
         text.draw(canvas.as_mut()).unwrap();
