@@ -65,9 +65,9 @@ fn main() {
     loop{
         let time_now = Utc::now();
         let (hours,minutes,seconds)= (time_now.hour(),time_now.minute(), time_now.second());
-        let time_str=time_now.format("%H%M%S").to_string().as_str();
+        let time_str=time_now.format("%H%M%S").to_string();
         let text = Text::new(
-            time_str,
+            time_str.as_str(),
             Point::new((cols / 2) as i32, (rows / 2) as i32),
             text_style
         );
