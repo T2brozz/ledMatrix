@@ -1,7 +1,7 @@
 use std::{thread, time};
 use crate::calender::get_calender;
 use crate::weather::{get_weather, ParseWeatherError};
-use rpi_led_panel::{RGBMatrix, RGBMatrixConfig};
+use rpi_led_panel::{Canvas, RGBMatrix, RGBMatrixConfig};
 use tokio::time::{sleep,Duration};
 use embedded_graphics::{
     mono_font::{ascii::FONT_8X13, MonoTextStyle},
@@ -63,16 +63,18 @@ fn main() {
 
 
     loop{
+        canvas.fill(0, 0, 0);
         let time_now = Utc::now();
         let (hours,minutes,seconds)= (time_now.hour(),time_now.minute(), time_now.second());
         let time_str=time_now.format("%H\n%M\n%S").to_string();
         let text = Text::new(
             time_str.as_str(),
-            Point::new((13) as i32, (20) as i32),
+            Point::new((7) as i32, (16) as i32),
             text_style
         );
         text.draw(canvas.as_mut()).unwrap();
         canvas = matrix.update_on_vsync(canvas);
 
     }
+
 }
