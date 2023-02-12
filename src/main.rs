@@ -4,7 +4,7 @@ use crate::weather::{get_weather, ParseWeatherError};
 use rpi_led_panel::{Canvas, RGBMatrix, RGBMatrixConfig};
 use tokio::time::{sleep,Duration};
 use embedded_graphics::{
-    mono_font::{ascii::FONT_6X12, MonoTextStyle},
+    mono_font::{ascii::FONT_8X13, MonoTextStyle},
     pixelcolor::Rgb888,
     prelude::*,
     primitives::{Circle, Line, PrimitiveStyle},
@@ -59,7 +59,7 @@ fn main() {
     let rows = config.rows as isize;
     let cols = config.cols as isize;
     let (mut matrix, mut canvas) = RGBMatrix::new(config, 0).expect("Matrix initialization failed");
-    let text_style=MonoTextStyle::new(&FONT_6X12, Rgb888::WHITE);
+    let text_style=MonoTextStyle::new(&FONT_8X13, Rgb888::WHITE);
 
 
     loop{
