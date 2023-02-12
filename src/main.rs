@@ -4,7 +4,7 @@ use crate::weather::{get_weather, ParseWeatherError};
 use rpi_led_panel::{RGBMatrix, RGBMatrixConfig};
 use tokio::time::{sleep,Duration};
 use embedded_graphics::{
-    mono_font::{ascii::FONT_6X10, MonoTextStyle},
+    mono_font::{ascii::FONT_8X13, MonoTextStyle},
     pixelcolor::Rgb888,
     prelude::*,
     primitives::{Circle, Line, PrimitiveStyle},
@@ -59,16 +59,16 @@ fn main() {
     let rows = config.rows as isize;
     let cols = config.cols as isize;
     let (mut matrix, mut canvas) = RGBMatrix::new(config, 0).expect("Matrix initialization failed");
-    let text_style=MonoTextStyle::new(&FONT_6X10, Rgb888::WHITE);
+    let text_style=MonoTextStyle::new(&FONT_8X13, Rgb888::WHITE);
 
 
     loop{
         let time_now = Utc::now();
         let (hours,minutes,seconds)= (time_now.hour(),time_now.minute(), time_now.second());
-        let time_str=time_now.format("%H%M%S").to_string();
+        let time_str=time_now.format("%H\n%M\n%S").to_string();
         let text = Text::new(
             time_str.as_str(),
-            Point::new((cols / 2) as i32, (rows / 2) as i32),
+            Point::new((13) as i32, (20) as i32),
             text_style
         );
         text.draw(canvas.as_mut()).unwrap();
