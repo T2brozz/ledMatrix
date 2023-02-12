@@ -1,4 +1,4 @@
-//use std::{thread, time};
+use std::{thread, time};
 use crate::calender::get_calender;
 use crate::weather::{get_weather, ParseWeatherError};
 use rpi_led_panel::{RGBMatrix, RGBMatrixConfig};
@@ -18,6 +18,7 @@ mod secrets;
 
 
 use std::io::Write;
+use chrono::{Timelike, Utc};
 use image::codecs::png::CompressionType::Default;
 use serde::de::Unexpected::Option;
 
@@ -58,14 +59,16 @@ fn main() {
     let rows = config.rows as isize;
     let cols = config.cols as isize;
     let (mut matrix, mut canvas) = RGBMatrix::new(config, 0).expect("Matrix initialization failed");
+    let text_style=MonoTextStyle::new(&FONT_6X10, Rgb888::WHITE);
 
-    let text = Text::with_alignment(
-        "Hello\nWorld",
-        Point::new((cols / 2) as i32, (rows / 2) as i32),
-        MonoTextStyle::new(&FONT_6X10, Rgb888::WHITE),
-        Alignment::Center,
-    );
+
     loop{
+        let time_now = Utc::now();
+        let time = Text::new(
+            &*format!("{}\n{}\n{}",time_now.hour(),time_now.minute(),time_now.second()),
+            Point::new((cols / 2) as i32, (rows / 2) as i32),
+            text_style
+        );
         text.draw(canvas.as_mut()).unwrap();
         canvas = matrix.update_on_vsync(canvas);
 
