@@ -60,7 +60,7 @@ async fn main() {
     let cols = config.cols as isize;
     let (mut matrix, mut canvas) = RGBMatrix::new(config, 0).expect("Matrix initialization failed");
     let text_style=MonoTextStyle::new(&FONT_8X13, Rgb888::WHITE);
-    let mut last_request_time=Utc::now();
+    let mut last_request_time=Utc::now().timestamp()-15*60;
     let mut last_response:(WeatherResponse) ;
     loop{
         canvas.fill(0, 0, 0);
@@ -69,18 +69,18 @@ async fn main() {
         let time_str=time_now.format("%H\n%M\n%S").to_string();
         let text = Text::new(
             time_str.as_str(),
-            Point::new((cols / 2) as i32, (rows / 2) as i32),
+            Point::new((0) as i32, (8) as i32),
             text_style
         );
         text.draw(canvas.as_mut()).unwrap();
         canvas = matrix.update_on_vsync(canvas);
 
-        if last_request_time.timestamp() <=  time_now.timestamp()-15*60 {
+        if last_request_time <=  time_now.timestamp()-15*60 {
             match get_weather().await {
                 Ok(w) => {last_response=w}
                 Err(_) => {}
             }
-            last_request_time=Utc::now();
+            last_request_time=Utc::now().timestamp();
             println!("wuu es geht");
         }
     }
