@@ -81,7 +81,7 @@ async fn main() {
             last_request_time=Utc::now().timestamp();
             println!("wuu es geht");
         }
-        let temperature_string =format!("{:.1}°C", last_response.temp);
+        let temperature_string =format!("{:.1} C", last_response.temp);
         let temperature = Text::new(
             temperature_string.as_str(),
             Point::new((20) as i32, (8) as i32),
