@@ -50,7 +50,7 @@ pub fn get_calender() {
             println!("Error: {:?}", error);
         }
     }
-    event_simplified = sort_simplefied_events(event_simplified);
+    event_simplified = sort_simplified_events(event_simplified);
     for event in event_simplified  {
         println!("{:?}", event);
     }
@@ -100,7 +100,7 @@ fn sort_birthdays(mut events: Vec<Event>) -> Vec<Event> {
             }
         ).collect()
 }
-fn sort_simplefied_events(mut events: Vec<Simple_Event>)-> Vec<Simple_Event>{
+fn sort_simplified_events(mut events: Vec<Simple_Event>) -> Vec<Simple_Event>{
     events.sort_by(|ev1,ev2|{
         let ev1_date = NaiveDate::from_ymd_opt(0000, ev1.date.month(), ev1.date.day());
         let ev2_date = NaiveDate::from_ymd_opt(0000, ev2.date.month(), ev2.date.day());

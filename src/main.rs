@@ -1,8 +1,8 @@
 use std::{thread, time};
 use crate::calender::get_calender;
-use crate::weather::{get_weather, ParseWeatherError};
+use crate::weather::{get_weather, ParseWeatherError, WeatherResponse};
 use rpi_led_panel::{Canvas, RGBMatrix, RGBMatrixConfig};
-use tokio::time::{sleep,Duration};
+use tokio::time::{sleep};
 use embedded_graphics::{
     mono_font::{ascii::FONT_8X13, MonoTextStyle},
     pixelcolor::Rgb888,
@@ -18,7 +18,7 @@ mod secrets;
 
 
 use std::io::Write;
-use chrono::{Timelike, Utc};
+use chrono::{Timelike, Utc,Duration};
 use image::codecs::png::CompressionType::Default;
 use serde::de::Unexpected::Option;
 
@@ -38,8 +38,8 @@ fn rotate([x, y]: [isize; 2], angle: f64) -> [f64; 2] {
         x as f64 * angle.sin() + y as f64 * angle.cos(),
     ]
 }
-
-fn main() {
+#[tokio::main]
+async fn main() {
     let config: RGBMatrixConfig= RGBMatrixConfig{
         gpio_mapping:String::from("adafruit_hat_pwm"),
         rows: 64,
@@ -60,8 +60,8 @@ fn main() {
     let cols = config.cols as isize;
     let (mut matrix, mut canvas) = RGBMatrix::new(config, 0).expect("Matrix initialization failed");
     let text_style=MonoTextStyle::new(&FONT_8X13, Rgb888::WHITE);
-
-
+    let mut last_request_time=Utc::now();
+    let mut last_response:(WeatherResponse) ;
     loop{
         canvas.fill(0, 0, 0);
         let time_now = Utc::now();
@@ -69,12 +69,20 @@ fn main() {
         let time_str=time_now.format("%H\n%M\n%S").to_string();
         let text = Text::new(
             time_str.as_str(),
-            Point::new((0) as i32, (9) as i32),
+            Point::new((cols / 2) as i32, (rows / 2) as i32),
             text_style
         );
         text.draw(canvas.as_mut()).unwrap();
         canvas = matrix.update_on_vsync(canvas);
 
+        if last_request_time.timestamp() <=  time_now.timestamp()-15*60 {
+            match get_weather().await {
+                Ok(w) => {last_response=w}
+                Err(_) => {}
+            }
+            last_request_time=Utc::now();
+            println!("wuu es geht");
+        }
     }
 
 }
