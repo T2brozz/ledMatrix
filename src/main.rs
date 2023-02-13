@@ -19,7 +19,7 @@ mod secrets;
 
 
 use std::io::Write;
-use chrono::{Timelike, Utc,Duration,TimeZone,Offset};
+use chrono::{Timelike, Utc, Duration, TimeZone, Offset};
 use chrono_tz::Europe::Berlin;
 use image::codecs::png::CompressionType::Default;
 use image::imageops::FilterType;
@@ -41,70 +41,71 @@ fn rotate([x, y]: [isize; 2], angle: f64) -> [f64; 2] {
         x as f64 * angle.sin() + y as f64 * angle.cos(),
     ]
 }
+
 #[tokio::main]
 async fn main() {
-    let config: RGBMatrixConfig= RGBMatrixConfig{
-        gpio_mapping:String::from("adafruit_hat_pwm"),
+    let config: RGBMatrixConfig = RGBMatrixConfig {
+        gpio_mapping: String::from("adafruit_hat_pwm"),
         rows: 64,
         cols: 64,
-        refresh_rate:  120 ,
-        pi_chip:  None,
-        pwm_bits: 11 ,
-        pwm_lsb_nanoseconds: 130 ,
-        slowdown: Some(2) ,
-        interlaced: false ,
-        dither_bits: 0 ,
-        parallel: 1 ,
-        panel_type: None ,
+        refresh_rate: 120,
+        pi_chip: None,
+        pwm_bits: 11,
+        pwm_lsb_nanoseconds: 130,
+        slowdown: Some(2),
+        interlaced: false,
+        dither_bits: 0,
+        parallel: 1,
+        panel_type: None,
         multiplexing: None,
-        row_setter:   String::from("DirectRowAddressSetter")
+        row_setter: String::from("DirectRowAddressSetter"),
     };
     let rows = config.rows as isize;
     let cols = config.cols as isize;
     let (mut matrix, mut canvas) = RGBMatrix::new(config, 0).expect("Matrix initialization failed");
-    let text_style=MonoTextStyle::new(&FONT_8X13, Rgb888::WHITE);
-    let red_text_style=MonoTextStyle::new(&FONT_8X13, Rgb888::RED);
-    let mut last_request_time=Utc::now().timestamp();
-    let mut last_response:(WeatherResponse)=get_weather().await.expect("First try to get weather data failed");
-    let mut wert=0.0;
-    loop{
+    let text_style = MonoTextStyle::new(&FONT_8X13, Rgb888::WHITE);
+    let red_text_style = MonoTextStyle::new(&FONT_8X13, Rgb888::RED);
+    let mut last_request_time = Utc::now().timestamp();
+    let mut last_response: (WeatherResponse) = get_weather().await.expect("First try to get weather data failed");
+    let mut wert = 0.0;
+    loop {
         canvas.fill(0, 0, 0);
 
         let time_now = Utc::now();
-        let time_str=time_now.with_timezone(&Berlin).format("%H\n%M\n%S").to_string();
+        let time_str = time_now.with_timezone(&Berlin).format("%H\n%M\n%S").to_string();
         let clock = Text::new(
             time_str.as_str(),
             Point::new((0) as i32, (8) as i32),
-            text_style
+            text_style,
         );
         //clock.draw(canvas.as_mut()).unwrap();
-        if last_request_time <=  time_now.timestamp()-15*60 {
+        if last_request_time <= time_now.timestamp() - 15 * 60 {
             match get_weather().await {
-                Ok(w) => {last_response=w}
+                Ok(w) => { last_response = w }
                 Err(_) => {}
             }
-            last_request_time=time_now.timestamp();
+            last_request_time = time_now.timestamp();
             println!("wuu es geht");
         }
-        let temperature_string =format!("{:.1} C", last_response.temp);
+        let temperature_string = format!("{:.1} C", last_response.temp);
         let temperature = Text::new(
             temperature_string.as_str(),
             Point::new((20) as i32, (8) as i32),
-            red_text_style
+            red_text_style,
         );
         //temperature.draw(canvas.as_mut()).unwrap();
-        let newiamge=last_response.icon_img.resize_exact(20,20,FilterType::Gaussian);
+        let newiamge = last_response.icon_img.resize_exact(20, 20, FilterType::Gaussian);
         let image_data = ImageRawBE::<Rgb888>::new(newiamge.as_bytes(), wert as u32);
-        let image= Image::new(
+        let image = Image::new(
             &image_data,
-            Point::new(10,10)
+            Point::new(10, 10),
         );
         image.draw(canvas.as_mut()).unwrap();
 
         canvas = matrix.update_on_vsync(canvas);
-        wert=wert+0.01;
-
-
+        wert = wert + 0.05;
+        if wert >= 40.0 {
+            wert = 0.0;
+        }
     }
-
 }

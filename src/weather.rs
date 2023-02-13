@@ -62,7 +62,7 @@ pub(crate) async fn get_weather() -> Result<WeatherResponse, ParseWeatherError> 
         Ok(value) => value,
         Err(e) => return Err(ParseWeatherError { details: e.to_string() })
     };
-    let http_response = match reqwest::get(format!("http://openweathermap.org/img/wn/{}.png", "01d")).await {
+    let http_response = match reqwest::get(format!("http://openweathermap.org/img/wn/{}.png", response.weather[0].icon)).await {
         Ok(value) => value,
         Err(e) => return Err(ParseWeatherError { details: e.to_string() })
     };
