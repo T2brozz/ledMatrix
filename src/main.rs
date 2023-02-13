@@ -94,7 +94,7 @@ async fn main() {
             red_text_style,
         );
         //temperature.draw(canvas.as_mut()).unwrap();
-        let newiamge = last_response.icon_img.resize_exact(20, 20, FilterType::Gaussian);
+        let newiamge = last_response.icon_img.resize_exact(20, 20, FilterType::Lanczos3);
         let image_data = ImageRawBE::<Rgb888>::new(newiamge.as_bytes(), wert as u32);
         let image = Image::new(
             &image_data,
