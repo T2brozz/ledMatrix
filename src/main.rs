@@ -4,6 +4,7 @@ use crate::weather::{get_weather, ParseWeatherError, WeatherResponse};
 use rpi_led_panel::{Canvas, RGBMatrix, RGBMatrixConfig};
 use tokio::time::{sleep};
 use embedded_graphics::{
+    image::{Image, ImageRawBE},
     mono_font::{ascii::FONT_8X13, MonoTextStyle},
     pixelcolor::Rgb888,
     prelude::*,
@@ -90,7 +91,12 @@ async fn main() {
             red_text_style
         );
         temperature.draw(canvas.as_mut()).unwrap();
-
+        let image_data = ImageRawBE::<Rgb888>::new(last_response.icon_img.as_bytes(), last_response.icon_img.as_bytes().len() as u32);
+        let image= Image::new(
+            &image_data,
+            Point::new(30,30)
+        );
+        image.draw(canvas.as_mut()).unwrap();
 
         canvas = matrix.update_on_vsync(canvas);
 
