@@ -22,6 +22,7 @@ use std::io::Write;
 use chrono::{Timelike, Utc,Duration,TimeZone,Offset};
 use chrono_tz::Europe::Berlin;
 use image::codecs::png::CompressionType::Default;
+use image::imageops::FilterType;
 use serde::de::Unexpected::Option;
 
 fn scale_col(value: isize, low: isize, high: isize) -> u8 {
@@ -91,12 +92,13 @@ async fn main() {
             red_text_style
         );
         //temperature.draw(canvas.as_mut()).unwrap();
-        let image_data = ImageRawBE::<Rgb888>::new(last_response.icon_img.as_bytes(), last_response.icon_img.width() as u32);
+        let newiamge=last_response.icon_img.resize_exact(12,12,FilterType::Nearest);
+        println!("{}",newiamge.width());
+        let image_data = ImageRawBE::<Rgb888>::new(newiamge.as_bytes(), 12 as u32);
         let image= Image::new(
             &image_data,
             Point::new(0,0)
         );
-        println!("{}",last_response.icon_id);
         image.draw(canvas.as_mut()).unwrap();
 
         canvas = matrix.update_on_vsync(canvas);
