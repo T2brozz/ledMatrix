@@ -60,6 +60,7 @@ async fn main() {
     let cols = config.cols as isize;
     let (mut matrix, mut canvas) = RGBMatrix::new(config, 0).expect("Matrix initialization failed");
     let text_style=MonoTextStyle::new(&FONT_8X13, Rgb888::WHITE);
+    let red_text_style=MonoTextStyle::new(&FONT_8X13, Rgb888::RED);
     let mut last_request_time=Utc::now().timestamp();
     let mut last_response:(WeatherResponse)=get_weather().await.expect("First try to get weather data failed");
     loop{
@@ -85,7 +86,7 @@ async fn main() {
         let temperature = Text::new(
             temperature_string.as_str(),
             Point::new((20) as i32, (8) as i32),
-            text_style
+            red_text_style
         );
         temperature.draw(canvas.as_mut()).unwrap();
 
