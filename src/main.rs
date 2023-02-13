@@ -66,6 +66,7 @@ async fn main() {
     let red_text_style=MonoTextStyle::new(&FONT_8X13, Rgb888::RED);
     let mut last_request_time=Utc::now().timestamp();
     let mut last_response:(WeatherResponse)=get_weather().await.expect("First try to get weather data failed");
+    let mut wert=0.0;
     loop{
         canvas.fill(0, 0, 0);
 
@@ -93,7 +94,7 @@ async fn main() {
         );
         //temperature.draw(canvas.as_mut()).unwrap();
         let newiamge=last_response.icon_img.resize_exact(20,20,FilterType::Gaussian);
-        let image_data = ImageRawBE::<Rgb888>::new(newiamge.as_bytes(), 17 as u32);
+        let image_data = ImageRawBE::<Rgb888>::new(newiamge.as_bytes(), wert as u32);
         let image= Image::new(
             &image_data,
             Point::new(10,10)
@@ -101,7 +102,7 @@ async fn main() {
         image.draw(canvas.as_mut()).unwrap();
 
         canvas = matrix.update_on_vsync(canvas);
-
+        wert=wert+0.01;
 
 
     }
