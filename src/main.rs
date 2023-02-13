@@ -96,6 +96,7 @@ async fn main() {
             &image_data,
             Point::new(0,0)
         );
+        println!("{}",last_response.icon_id);
         image.draw(canvas.as_mut()).unwrap();
 
         canvas = matrix.update_on_vsync(canvas);
