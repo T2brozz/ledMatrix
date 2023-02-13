@@ -94,7 +94,7 @@ async fn main() {
             red_text_style,
         );
         //temperature.draw(canvas.as_mut()).unwrap();
-        let newiamge = last_response.icon_img.resize_exact(20, 20, FilterType::Lanczos3);
+        let newiamge = last_response.icon_img.resize_exact(40, 40, FilterType::Lanczos3);
         let image_data = ImageRawBE::<Rgb888>::new(newiamge.as_bytes(), wert as u32);
         let image = Image::new(
             &image_data,
@@ -103,8 +103,8 @@ async fn main() {
         image.draw(canvas.as_mut()).unwrap();
 
         canvas = matrix.update_on_vsync(canvas);
-        wert = wert + 0.05;
-        if wert >= 40.0 {
+        wert = wert + 0.1;
+        if wert >= 50.0 {
             wert = 0.0;
         }
     }
