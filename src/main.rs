@@ -75,7 +75,7 @@ async fn main() {
             Point::new((0) as i32, (8) as i32),
             text_style
         );
-        clock.draw(canvas.as_mut()).unwrap();
+        //clock.draw(canvas.as_mut()).unwrap();
         if last_request_time <=  time_now.timestamp()-15*60 {
             match get_weather().await {
                 Ok(w) => {last_response=w}
@@ -90,11 +90,11 @@ async fn main() {
             Point::new((20) as i32, (8) as i32),
             red_text_style
         );
-        temperature.draw(canvas.as_mut()).unwrap();
+        //temperature.draw(canvas.as_mut()).unwrap();
         let image_data = ImageRawBE::<Rgb888>::new(last_response.icon_img.as_bytes(), last_response.icon_img.width() as u32);
         let image= Image::new(
             &image_data,
-            Point::new(30,30)
+            Point::new(0,0)
         );
         image.draw(canvas.as_mut()).unwrap();
 
