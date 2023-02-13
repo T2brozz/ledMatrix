@@ -95,7 +95,7 @@ async fn main() {
         );
         //temperature.draw(canvas.as_mut()).unwrap();
         let newiamge = last_response.icon_img.thumbnail(26, 26);
-        let image_data = ImageRawBE::<Rgb888>::new(newiamge.as_bytes(), wert as u32);
+        let image_data = ImageRawBE::<Rgb888>::new(newiamge.as_rgb8().as_bytes(), wert as u32);
         let image = Image::new(
             &image_data,
             Point::new(10, 10),
