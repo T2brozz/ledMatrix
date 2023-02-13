@@ -18,7 +18,8 @@ mod secrets;
 
 
 use std::io::Write;
-use chrono::{Timelike, Utc,Duration};
+use chrono::{Timelike, Utc,Duration,TimeZone,Offset};
+use chrono_tz::Europe::Berlin;
 use image::codecs::png::CompressionType::Default;
 use serde::de::Unexpected::Option;
 
@@ -60,14 +61,14 @@ async fn main() {
     let cols = config.cols as isize;
     let (mut matrix, mut canvas) = RGBMatrix::new(config, 0).expect("Matrix initialization failed");
     let text_style=MonoTextStyle::new(&FONT_8X13, Rgb888::WHITE);
-    let red_text_style=MonoTextStyle::new(&FONT_8X13, Rgb888::GREEN);
+    let red_text_style=MonoTextStyle::new(&FONT_8X13, Rgb888::RED);
     let mut last_request_time=Utc::now().timestamp();
     let mut last_response:(WeatherResponse)=get_weather().await.expect("First try to get weather data failed");
     loop{
         canvas.fill(0, 0, 0);
 
         let time_now = Utc::now();
-        let time_str=time_now.format("%H\n%M\n%S").to_string();
+        let time_str=time_now.with_timezone(&Berlin).format("%H\n%M\n%S").to_string();
         let clock = Text::new(
             time_str.as_str(),
             Point::new((0) as i32, (8) as i32),
@@ -79,7 +80,7 @@ async fn main() {
                 Ok(w) => {last_response=w}
                 Err(_) => {}
             }
-            last_request_time=Utc::now().timestamp();
+            last_request_time=time_now.timestamp();
             println!("wuu es geht");
         }
         let temperature_string =format!("{:.1} C", last_response.temp);
