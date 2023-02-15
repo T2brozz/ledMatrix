@@ -108,8 +108,8 @@ async fn main() {
         calenderevent.draw(canvas.as_mut()).unwrap();
 
         canvas = matrix.update_on_vsync(canvas);
-        current_Event.text_scroll-=0.1;
-        if current_Event.text_scroll < -10.0 {
+        current_Event.text_scroll-=0.07;
+        if current_Event.text_scroll < -20.0 {
             current_Event.text_scroll=0.0;
         }
     }
