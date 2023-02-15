@@ -60,7 +60,7 @@ async fn main() {
         (get_weather().await.expect("First try to get weather data failed"),
          get_calender().await.expect("First try to get calender events failed")
         );
-    let mut current_Event = CurrentEvent { text_scroll: 0, event_index: 0 };
+    let mut current_Event = CurrentEvent { text_scroll: 0.0, event_index: 0 };
     let mut wert = 0.0;
     loop {
         canvas.fill(0, 0, 0);
