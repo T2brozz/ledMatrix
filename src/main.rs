@@ -26,21 +26,9 @@ use image::EncodableLayout;
 use image::imageops::FilterType;
 use serde::de::Unexpected::Option;
 
-fn scale_col(value: isize, low: isize, high: isize) -> u8 {
-    if value < low {
-        return 0;
-    }
-    if value > high {
-        return 255;
-    }
-    (255 * (value - low) / (high - low)) as u8
-}
-
-fn rotate([x, y]: [isize; 2], angle: f64) -> [f64; 2] {
-    [
-        x as f64 * angle.cos() - y as f64 * angle.sin(),
-        x as f64 * angle.sin() + y as f64 * angle.cos(),
-    ]
+struct CurrentEvent {
+    text_scroll: f32,
+    event_index: usize,
 }
 
 #[tokio::main]
@@ -72,6 +60,7 @@ async fn main() {
         (get_weather().await.expect("First try to get weather data failed"),
          get_calender().await.expect("First try to get calender events failed")
         );
+    let mut current_Event = CurrentEvent { text_scroll: 0, event_index: 0 };
     let mut wert = 0.0;
     loop {
         canvas.fill(0, 0, 0);
@@ -90,8 +79,8 @@ async fn main() {
                 Err(_) => {}
             };
             match get_calender().await {
-                Ok(events)=>last_response.1=events,
-                Err(_)=>{}
+                Ok(events) => last_response.1 = events,
+                Err(_) => {}
             };
             last_request_time = time_now.timestamp();
             println!("wuu es geht");
@@ -112,16 +101,16 @@ async fn main() {
         //image.draw(canvas.as_mut()).unwrap();
 
         let calenderevent = Text::new(
-            &last_response.1[0].title,
-            Point::new((0) as i32, (45) as i32),
+            &last_response.1[current_Event.event_index].title,
+            Point::new((current_Event.text_scroll) as i32, (45) as i32),
             blue_text_style,
         );
         calenderevent.draw(canvas.as_mut()).unwrap();
 
         canvas = matrix.update_on_vsync(canvas);
-        wert = wert + 0.1;
-        if wert >= 50.0 {
-            wert = 0.0;
+        current_Event.text_scroll-=0.1;
+        if current_Event.text_scroll < -10.0 {
+            current_Event.text_scroll=0.0;
         }
     }
 }
