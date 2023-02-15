@@ -95,7 +95,7 @@ async fn main() {
             last_request_time = time_now.timestamp();
             println!("wuu es geht");
         }
-        let temperature_string = format!("{:.1} C", last_response.0.temp);
+        let temperature_string = format!("{:.1}C", last_response.0.temp);
         let temperature = Text::new(
             temperature_string.as_str(),
             Point::new((20) as i32, (8) as i32),
@@ -112,7 +112,7 @@ async fn main() {
 
         let calenderevent = Text::new(
             &last_response.1[0].title,
-            Point::new((2) as i32, (20) as i32),
+            Point::new((0) as i32, (40) as i32),
             red_text_style,
         );
         calenderevent.draw(canvas.as_mut()).unwrap();
