@@ -1,34 +1,43 @@
 use chrono::{Utc, DateTime, TimeZone, NaiveDate, NaiveDateTime, NaiveTime, Datelike};
 use chrono::format::Numeric::Timestamp;
-use minicaldav::{Calendar, Event};
+use minicaldav::{Calendar, Error, Event};
 use url::Url;
 use ureq::Agent;
 use crate::secrets::{CALENDER_USER, CALENDER_PASS};
 
 #[derive(Debug)]
-struct Simple_Event {
-    title: String,
-    date: NaiveDateTime,
-    birthday: bool,
+pub(crate) struct Simple_Event {
+    pub title: String,
+    pub date: NaiveDateTime,
+    pub birthday: bool,
+}
+#[derive(Debug, Clone)]
+pub(crate) struct ParseCalenderEventError {
+    details: String,
 }
 
-pub fn get_calender() {
+pub(crate)  async fn get_calender() -> Result< Vec<Simple_Event> , ParseCalenderEventError>{
     let agent = Agent::new();
     let url = Url::parse("https://dav.mailbox.org").unwrap();
     let mut event_simplified = Vec::<Simple_Event>::new();
 
-    let calendars = minicaldav::get_calendars(agent.clone(), CALENDER_USER, CALENDER_PASS, &url).unwrap();
+    let calendars = match minicaldav::get_calendars(agent.clone(), CALENDER_USER, CALENDER_PASS, &url) {
+        Ok(val) => val,
+        Err(e) => return Err(ParseCalenderEventError { details: e.to_string() })
+    };
     let calendars = calendars.
         iter().
         filter(|&cal| ["Calendar", "Birthdays"].contains(&&**cal.name()));
     for calendar in calendars {
         println!("{:?}", calendar);
-        let (mut events, errors) = minicaldav::get_events(
+        let (mut events, errors) = match minicaldav::get_events(
             agent.clone(),
             CALENDER_USER,
             CALENDER_PASS,
-            &calendar).
-            unwrap();
+            &calendar) {
+            Ok(val) => {val}
+            Err(e) => return Err(ParseCalenderEventError { details: e.to_string() })
+        };
 
         events = match calendar.name().as_str() {
             "Calendar" => sort_calender_events(events),
@@ -48,12 +57,14 @@ pub fn get_calender() {
         }
         for error in errors {
             println!("Error: {:?}", error);
+            return return Err(ParseCalenderEventError { details: error.to_string() })
         }
     }
     event_simplified = sort_simplified_events(event_simplified);
-    for event in event_simplified  {
+    /*for event in event_simplified  {
         println!("{:?}", event);
-    }
+    }*/
+    Ok(event_simplified)
 }
 
 fn parse_date_time(event: &Event) -> NaiveDateTime {
@@ -78,8 +89,8 @@ fn sort_calender_events(mut events: Vec<Event>) -> Vec<Event> {
 }
 
 fn sort_birthdays(mut events: Vec<Event>) -> Vec<Event> {
-    let now = NaiveDate::from_ymd_opt(0000, 7, 6).unwrap();
-    //let now= Utc::now(); //TODO
+    //let now = NaiveDate::from_ymd_opt(0000, 7, 6).unwrap();
+    let now= Utc::now();
     events.sort_by(|ev1, ev2|
         {
             let ev1_date = parse_date_time(ev1);

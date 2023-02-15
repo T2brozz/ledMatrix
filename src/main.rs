@@ -1,5 +1,5 @@
 use std::{thread, time};
-use crate::calender::get_calender;
+use crate::calender::{get_calender, Simple_Event};
 use crate::weather::{get_weather, ParseWeatherError, WeatherResponse};
 use rpi_led_panel::{Canvas, RGBMatrix, RGBMatrixConfig};
 use tokio::time::{sleep};
@@ -67,7 +67,10 @@ async fn main() {
     let text_style = MonoTextStyle::new(&FONT_8X13, Rgb888::WHITE);
     let red_text_style = MonoTextStyle::new(&FONT_8X13, Rgb888::RED);
     let mut last_request_time = Utc::now().timestamp();
-    let mut last_response: (WeatherResponse) = get_weather().await.expect("First try to get weather data failed");
+    let mut last_response: (WeatherResponse, Vec<Simple_Event>) =
+        (get_weather().await.expect("First try to get weather data failed"),
+         get_calender().await.expect("First try to get calender events failed")
+        );
     let mut wert = 0.0;
     loop {
         canvas.fill(0, 0, 0);
@@ -79,29 +82,40 @@ async fn main() {
             Point::new((0) as i32, (8) as i32),
             text_style,
         );
-        //clock.draw(canvas.as_mut()).unwrap();
+        clock.draw(canvas.as_mut()).unwrap();
         if last_request_time <= time_now.timestamp() - 15 * 60 {
             match get_weather().await {
-                Ok(w) => { last_response = w }
+                Ok(weather) => { last_response.0 = weather }
                 Err(_) => {}
-            }
+            };
+            match get_calender().await {
+                Ok(events)=>last_response.1=events,
+                Err(_)=>{}
+            };
             last_request_time = time_now.timestamp();
             println!("wuu es geht");
         }
-        let temperature_string = format!("{:.1} C", last_response.temp);
+        let temperature_string = format!("{:.1} C", last_response.0.temp);
         let temperature = Text::new(
             temperature_string.as_str(),
             Point::new((20) as i32, (8) as i32),
             red_text_style,
         );
-        //temperature.draw(canvas.as_mut()).unwrap();
-        let newiamge = last_response.icon_img.thumbnail(26, 26);
-        let image_data = ImageRawBE::<Rgb888>::new(newiamge.as_rgb8().unwrap().as_bytes(), wert as u32);
+        temperature.draw(canvas.as_mut()).unwrap();
+        let newiamge = last_response.0.icon_img.thumbnail(26, 26);
+        let image_data = ImageRawBE::<Rgb888>::new(newiamge.as_bytes(), wert as u32);
         let image = Image::new(
             &image_data,
             Point::new(10, 10),
         );
-        image.draw(canvas.as_mut()).unwrap();
+        //image.draw(canvas.as_mut()).unwrap();
+
+        let calenderevent = Text::new(
+            &last_response.1[0].title,
+            Point::new((2) as i32, (20) as i32),
+            red_text_style,
+        );
+        calenderevent.draw(canvas.as_mut()).unwrap();
 
         canvas = matrix.update_on_vsync(canvas);
         wert = wert + 0.1;
