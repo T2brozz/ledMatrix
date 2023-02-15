@@ -66,6 +66,7 @@ async fn main() {
     let (mut matrix, mut canvas) = RGBMatrix::new(config, 0).expect("Matrix initialization failed");
     let text_style = MonoTextStyle::new(&FONT_8X13, Rgb888::WHITE);
     let red_text_style = MonoTextStyle::new(&FONT_8X13, Rgb888::RED);
+    let blue_text_style = MonoTextStyle::new(&FONT_8X13, Rgb888::BLUE);
     let mut last_request_time = Utc::now().timestamp();
     let mut last_response: (WeatherResponse, Vec<Simple_Event>) =
         (get_weather().await.expect("First try to get weather data failed"),
@@ -112,8 +113,8 @@ async fn main() {
 
         let calenderevent = Text::new(
             &last_response.1[0].title,
-            Point::new((0) as i32, (40) as i32),
-            red_text_style,
+            Point::new((0) as i32, (45) as i32),
+            blue_text_style,
         );
         calenderevent.draw(canvas.as_mut()).unwrap();
 
