@@ -99,7 +99,11 @@ async fn main() {
         let calender_event = Text::new(
             &last_response.1[current_event.event_index].title,
             Point::new((current_event.text_scroll) as i32, 45_i32),
-            blue_text_style,
+            if last_response.1[current_event.event_index].birthday {
+                red_text_style
+            } else {
+                blue_text_style
+            },
         );
         calender_event.draw(canvas.as_mut()).unwrap();
 
@@ -114,6 +118,10 @@ async fn main() {
         current_event.text_scroll -= 0.099;
         if current_event.text_scroll < -(last_response.1[current_event.event_index].title.chars().count() as i32 * 8) as f32 {
             current_event.text_scroll = 5.0;
+            current_event.event_index += 1;
+            if last_response.1.len() >= current_event.event_index {
+                current_event.event_index = 0;
+            }
         }
     }
 }
