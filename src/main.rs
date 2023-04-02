@@ -49,7 +49,7 @@ async fn main() {
         panel_type: None,
         multiplexing: None,
         row_setter: RowAddressSetterType::Direct,
-        led_sequence: LedSequence::Brg,
+        led_sequence: LedSequence::Gbr,
     };
     let rows = config.rows as isize;
     let cols = config.cols as isize;
