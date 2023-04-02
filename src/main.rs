@@ -63,7 +63,7 @@ async fn main() {
          get_calender().await.expect("First try to get calender events failed")
         );
     let mut current_event = CurrentEvent { text_scroll: 5.0, event_index: 0 };
-    let mut wert = 0.0;
+    println!("{:?}",last_response.1);
     loop {
         canvas.fill(0, 0, 0);
 
