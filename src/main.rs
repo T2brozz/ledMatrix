@@ -103,7 +103,7 @@ async fn main() {
         );
         calender_event.draw(canvas.as_mut()).unwrap();
 
-        let date_string=&last_response.1[current_event.event_index].date.format("%d.%m").to_string();
+        let date_string = last_response.1[current_event.event_index].date.format("%d.%m").to_string();
         let calender_date = Text::new(
             date_string.as_str(),
             Point::new(12, 60_i32),
@@ -112,7 +112,7 @@ async fn main() {
         calender_date.draw(canvas.as_mut()).unwrap();
         canvas = matrix.update_on_vsync(canvas);
         current_event.text_scroll -= 0.07;
-        if current_event.text_scroll < (last_response.1[current_event.event_index].title.chars().count() as i32 * 8) as f32 {
+        if current_event.text_scroll < -(last_response.1[current_event.event_index].title.chars().count() as i32 * 8) as f32 {
             current_event.text_scroll = 5.0;
         }
     }
