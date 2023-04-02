@@ -71,26 +71,20 @@ async fn main() {
         let time_str = time_now.with_timezone(&Berlin).format("%H\n%M\n%S").to_string();
         let clock = Text::new(
             time_str.as_str(),
-            Point::new((0) as i32, (8) as i32),
+            Point::new(0_i32, 8_i32),
             text_style,
         );
         clock.draw(canvas.as_mut()).unwrap();
         if last_request_time <= time_now.timestamp() - 15 * 60 {
-            match get_weather().await {
-                Ok(weather) => { last_response.0 = weather }
-                Err(_) => {}
-            };
-            match get_calender().await {
-                Ok(events) => last_response.1 = events,
-                Err(_) => {}
-            };
+            if let Ok(weather) = get_weather().await { last_response.0 = weather };
+            if let Ok(events) = get_calender().await { last_response.1 = events };
             last_request_time = time_now.timestamp();
             println!("wuu es geht");
         }
         let temperature_string = format!("{:.1}C", last_response.0.temp);
         let temperature = Text::new(
             temperature_string.as_str(),
-            Point::new((20) as i32, (8) as i32),
+            Point::new(20_i32, 8_i32),
             red_text_style,
         );
         temperature.draw(canvas.as_mut()).unwrap();
@@ -104,15 +98,15 @@ async fn main() {
 
         let calenderevent = Text::new(
             &last_response.1[current_event.event_index].title,
-            Point::new((current_event.text_scroll) as i32, (45) as i32),
+            Point::new((current_event.text_scroll) as i32, 45_i32),
             blue_text_style,
         );
         calenderevent.draw(canvas.as_mut()).unwrap();
 
         canvas = matrix.update_on_vsync(canvas);
-        current_event.text_scroll-=0.07;
+        current_event.text_scroll -= 0.07;
         if current_event.text_scroll < -20.0 {
-            current_event.text_scroll=0.0;
+            current_event.text_scroll = 0.0;
         }
     }
 }

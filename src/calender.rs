@@ -49,15 +49,12 @@ pub(crate)  async fn get_calender() -> Result< Vec<Simple_Event> , ParseCalender
             event_simplified.push(Simple_Event {
                 title: event.get("SUMMARY").unwrap().to_string(),
                 date: parse_date_time(&event),
-                birthday: match calendar.name().as_str() {
-                    "Birthdays" => true,
-                    _ => false
-                },
+                birthday: matches!(calendar.name().as_str(), "Birthdays"),
             })
         }
-        for error in errors {
+        if let Some(error) = errors.into_iter().next() {
             println!("Error: {:?}", error);
-            return return Err(ParseCalenderEventError { details: error.to_string() })
+            return Err(ParseCalenderEventError { details: error.to_string() })
         }
     }
     event_simplified = sort_simplified_events(event_simplified);
@@ -81,8 +78,7 @@ fn parse_date_time(event: &Event) -> NaiveDateTime {
 
 fn sort_calender_events(mut events: Vec<Event>) -> Vec<Event> {
     let now = Utc::now();
-    events.sort_by(|ev1, ev2|
-        parse_date_time(ev1).cmp(&parse_date_time(ev2)));
+    events.sort_by_key(parse_date_time);
 
     events.into_iter().
         filter(|ev| parse_date_time(&ev) >= now.naive_utc()).collect()
@@ -107,9 +103,8 @@ fn sort_birthdays(mut events: Vec<Event>) -> Vec<Event> {
                 let ev_date = parse_date_time(ev);
                 let ev_date = NaiveDate::from_ymd_opt(0000, ev_date.month(), ev_date.day()).unwrap();
                 let now_date = NaiveDate::from_ymd_opt(0000, now.month(), now.day()).unwrap();
-                return ev_date >= now_date;
-            }
-        ).collect()
+                ev_date >= now_date
+            }).collect()
 }
 fn sort_simplified_events(mut events: Vec<Simple_Event>) -> Vec<Simple_Event>{
     events.sort_by(|ev1,ev2|{
@@ -118,5 +113,5 @@ fn sort_simplified_events(mut events: Vec<Simple_Event>) -> Vec<Simple_Event>{
         ev1_date.cmp(&ev2_date)
     });
 
-    return events;
+    events
 }
