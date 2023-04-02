@@ -111,7 +111,7 @@ async fn main() {
         );
         calender_date.draw(canvas.as_mut()).unwrap();
         canvas = matrix.update_on_vsync(canvas);
-        current_event.text_scroll -= 0.07;
+        current_event.text_scroll -= 0.099;
         if current_event.text_scroll < -(last_response.1[current_event.event_index].title.chars().count() as i32 * 8) as f32 {
             current_event.text_scroll = 5.0;
         }
