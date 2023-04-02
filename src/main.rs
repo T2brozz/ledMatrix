@@ -62,7 +62,7 @@ async fn main() {
         (get_weather().await.expect("First try to get weather data failed"),
          get_calender().await.expect("First try to get calender events failed")
         );
-    let mut current_event = CurrentEvent { text_scroll: 0.0, event_index: 0 };
+    let mut current_event = CurrentEvent { text_scroll: 5.0, event_index: 0 };
     let mut wert = 0.0;
     loop {
         canvas.fill(0, 0, 0);
@@ -110,11 +110,10 @@ async fn main() {
             blue_text_style,
         );
         calender_date.draw(canvas.as_mut()).unwrap();
-
         canvas = matrix.update_on_vsync(canvas);
         current_event.text_scroll -= 0.07;
-        if current_event.text_scroll < -20.0 {
-            current_event.text_scroll = 0.0;
+        if current_event.text_scroll < (last_response.1[current_event.event_index].title.chars().count() as i32 * 8) as f32 {
+            current_event.text_scroll = 5.0;
         }
     }
 }
