@@ -1,0 +1,11 @@
+[Unit]
+Description=startet die ledmatrix
+After=network.target
+
+[Service]
+ExecStart=/home/pi/ledMatrix/target/release/ledMatrix
+ExecStop=killall /home/pi/ledMatrix/target/release/ledMatrix
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

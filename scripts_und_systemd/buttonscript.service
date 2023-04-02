@@ -1,0 +1,11 @@
+[Unit]
+Description=startet die gpio controlls übber die ledmatrix
+After=network.target
+
+[Service]
+ExecStart=/home/pi/scriptstart.sh
+ExecStop=pkill /home/pi/scriptstart.sh
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
