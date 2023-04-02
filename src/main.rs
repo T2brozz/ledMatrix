@@ -119,7 +119,7 @@ async fn main() {
             println!("{:?}",&last_response.1[current_event.event_index]);
             current_event.text_scroll = 5.0;
             current_event.event_index += 1;
-            if last_response.1.len() >= current_event.event_index {
+            if  current_event.event_index >= last_response.1.len() {
                 current_event.event_index = 0;
             }
         }
