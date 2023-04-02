@@ -29,7 +29,6 @@ pub(crate)  async fn get_calender() -> Result< Vec<Simple_Event> , ParseCalender
         iter().
         filter(|&cal| ["Calendar", "Birthdays"].contains(&&**cal.name()));
     for calendar in calendars {
-        println!("{:?}", calendar);
         let (mut events, errors) = match minicaldav::get_events(
             agent.clone(),
             CALENDER_USER,

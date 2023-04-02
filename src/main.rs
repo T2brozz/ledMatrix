@@ -116,7 +116,6 @@ async fn main() {
         canvas = matrix.update_on_vsync(canvas);
         current_event.text_scroll -= 0.099;
         if current_event.text_scroll < -(last_response.1[current_event.event_index].title.chars().count() as i32 * 8) as f32 {
-            println!("{:?}",&last_response.1[current_event.event_index]);
             current_event.text_scroll = 5.0;
             current_event.event_index += 1;
             if  current_event.event_index >= last_response.1.len() {
