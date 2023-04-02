@@ -88,20 +88,28 @@ async fn main() {
             red_text_style,
         );
         temperature.draw(canvas.as_mut()).unwrap();
-        let newiamge = last_response.0.icon_img.thumbnail(26, 26);
-        let image_data = ImageRawBE::<Rgb888>::new(newiamge.as_bytes(), wert as u32);
+        let new_image = last_response.0.icon_img.thumbnail(26, 26);
+        let image_data = ImageRawBE::<Rgb888>::new(new_image.as_bytes(), wert as u32);
         let image = Image::new(
             &image_data,
             Point::new(10, 10),
         );
         //image.draw(canvas.as_mut()).unwrap();
 
-        let calenderevent = Text::new(
+        let calender_event = Text::new(
             &last_response.1[current_event.event_index].title,
             Point::new((current_event.text_scroll) as i32, 45_i32),
             blue_text_style,
         );
-        calenderevent.draw(canvas.as_mut()).unwrap();
+        calender_event.draw(canvas.as_mut()).unwrap();
+
+        let date_string=&last_response.1[current_event.event_index].date.to_string();
+        let calender_date = Text::new(
+            date_string.as_str(),
+            Point::new((current_event.text_scroll) as i32, 60_i32),
+            blue_text_style,
+        );
+        calender_date.draw(canvas.as_mut()).unwrap();
 
         canvas = matrix.update_on_vsync(canvas);
         current_event.text_scroll -= 0.07;
