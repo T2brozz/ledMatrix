@@ -61,19 +61,10 @@ async fn main() {
          get_calender().await.expect("First try to get calender events failed")
         );
     let mut current_event = CurrentEvent { text_scroll: 5.0, event_index: 0 };
-    let on_off_times= (DateTime::parse_from_rfc2822("Tue, 1 Jul 2003 07:00:00 +0000").unwrap().time() , DateTime::parse_from_rfc2822("Tue, 1 Jul 2003 22:00:00 +0000").unwrap().time());
-    let mut display_on=true;
     loop {
 
         let time_now = Utc::now();
-        if time_now.time()>= on_off_times.0 && time_now.time() <= on_off_times.1{
-            display_on=true;
-        }else {
-            display_on=false;
-        }
-        if !display_on {
-            continue
-        }
+
         canvas.fill(0, 0, 0);
 
 
