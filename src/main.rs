@@ -64,12 +64,12 @@ async fn main() {
     let on_off_times= (DateTime::parse_from_rfc2822("Tue, 1 Jul 2003 07:00:00 +0100").unwrap().timestamp() , DateTime::parse_from_rfc2822("Tue, 1 Jul 2003 23:00:00 +0100").unwrap().timestamp());
     let mut display_on=true;
     loop {
-        println!("{}",display_on);
 
         let time_now = Utc::now();
+        println!("{:?}",(on_off_times,time_now.timestamp()));
         if time_now.timestamp()>= on_off_times.0 && time_now.timestamp() <= on_off_times.1{
             display_on=true;
-        }else if time_now.timestamp()>=on_off_times.1 {
+        }else {
             display_on=false;
         }
         if !display_on {
