@@ -60,7 +60,7 @@ async fn main() {
         (get_weather().await.expect("First try to get weather data failed"),
          get_calender().await.expect("First try to get calender events failed")
         );
-    let mut current_Event = CurrentEvent { text_scroll: 0.0, event_index: 0 };
+    let mut current_event = CurrentEvent { text_scroll: 0.0, event_index: 0 };
     let mut wert = 0.0;
     loop {
         canvas.fill(0, 0, 0);
@@ -101,16 +101,16 @@ async fn main() {
         //image.draw(canvas.as_mut()).unwrap();
 
         let calenderevent = Text::new(
-            &last_response.1[current_Event.event_index].title,
-            Point::new((current_Event.text_scroll) as i32, (45) as i32),
+            &last_response.1[current_event.event_index].title,
+            Point::new((current_event.text_scroll) as i32, (45) as i32),
             blue_text_style,
         );
         calenderevent.draw(canvas.as_mut()).unwrap();
 
         canvas = matrix.update_on_vsync(canvas);
-        current_Event.text_scroll-=0.07;
-        if current_Event.text_scroll < -20.0 {
-            current_Event.text_scroll=0.0;
+        current_event.text_scroll-=0.07;
+        if current_event.text_scroll < -20.0 {
+            current_event.text_scroll=0.0;
         }
     }
 }
