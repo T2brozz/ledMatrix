@@ -63,7 +63,6 @@ async fn main() {
          get_calender().await.expect("First try to get calender events failed")
         );
     let mut current_event = CurrentEvent { text_scroll: 5.0, event_index: 0 };
-    println!("{:?}",last_response.1);
     loop {
         canvas.fill(0, 0, 0);
 
@@ -117,10 +116,11 @@ async fn main() {
         canvas = matrix.update_on_vsync(canvas);
         current_event.text_scroll -= 0.099;
         if current_event.text_scroll < -(last_response.1[current_event.event_index].title.chars().count() as i32 * 8) as f32 {
+            println!("{:?}",&last_response.1[current_event.event_index]);
             current_event.text_scroll = 5.0;
             current_event.event_index += 1;
             if last_response.1.len() >= current_event.event_index {
-                current_event.event_index = 0;
+                //current_event.event_index = 0;
             }
         }
     }
