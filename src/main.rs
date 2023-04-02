@@ -65,7 +65,7 @@ async fn main() {
          get_calender().await.expect("First try to get calender events failed")
         );
     let mut current_event = CurrentEvent { text_scroll: 5.0, event_index: 0 };
-    let on_off_times= (DateTime::parse_from_rfc2822("Thu Jan 01 1970 07:00:00 GMT+0100").unwrap().timestamp(),DateTime::parse_from_rfc2822("Thu Jan 01 1970 22:00:00 GMT+0100").unwrap().timestamp());
+    let on_off_times= (DateTime::parse_from_rfc2822("Thu Jan 01 1970 07:00:00 +0100").unwrap().timestamp(),DateTime::parse_from_rfc2822("Thu Jan 01 1970 22:00:00 +0100").unwrap().timestamp());
     let mut display_on=true;
     loop {
         if(!display_on){
