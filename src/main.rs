@@ -1,7 +1,7 @@
 use std::{thread, time};
 use crate::calender::{get_calender, Simple_Event};
 use crate::weather::{get_weather, ParseWeatherError, WeatherResponse};
-use rpi_led_panel::{Canvas, RGBMatrix, RGBMatrixConfig};
+use rpi_led_panel::{Canvas, HardwareMapping, LedSequence, RGBMatrix, RGBMatrixConfig, RowAddressSetterType};
 use tokio::time::{sleep};
 use embedded_graphics::{
     image::{Image, ImageRawBE},
@@ -34,7 +34,7 @@ struct CurrentEvent {
 #[tokio::main]
 async fn main() {
     let config: RGBMatrixConfig = RGBMatrixConfig {
-        gpio_mapping: String::from("adafruit_hat_pwm"),
+        hardware_mapping: HardwareMapping::adafruit_hat_pwm(),
         rows: 64,
         cols: 64,
         refresh_rate: 120,
@@ -44,10 +44,12 @@ async fn main() {
         slowdown: Some(2),
         interlaced: false,
         dither_bits: 0,
+        chain_length: 1,
         parallel: 1,
         panel_type: None,
         multiplexing: None,
-        row_setter: String::from("DirectRowAddressSetter"),
+        row_setter: RowAddressSetterType::Direct,
+        led_sequence: LedSequence::Brg,
     };
     let rows = config.rows as isize;
     let cols = config.cols as isize;
