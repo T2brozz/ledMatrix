@@ -103,10 +103,10 @@ async fn main() {
         );
         calender_event.draw(canvas.as_mut()).unwrap();
 
-        let date_string=&last_response.1[current_event.event_index].date.format("%d.%m.%Y").to_string();
+        let date_string=&last_response.1[current_event.event_index].date.format("%d.%m").to_string();
         let calender_date = Text::new(
             date_string.as_str(),
-            Point::new(0, 60_i32),
+            Point::new(17, 60_i32),
             blue_text_style,
         );
         calender_date.draw(canvas.as_mut()).unwrap();
