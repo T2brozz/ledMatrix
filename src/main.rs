@@ -19,7 +19,9 @@ mod secrets;
 
 
 use std::io::Write;
-use chrono::{Timelike, Utc, Duration, TimeZone, Offset};
+use chrono::{Timelike, Utc, Duration, TimeZone, Offset, NaiveTime, DateTime};
+use chrono::format::Item::Numeric;
+use chrono::format::Numeric::Timestamp;
 use chrono_tz::Europe::Berlin;
 use image::codecs::png::CompressionType::Default;
 use image::EncodableLayout;
@@ -63,10 +65,22 @@ async fn main() {
          get_calender().await.expect("First try to get calender events failed")
         );
     let mut current_event = CurrentEvent { text_scroll: 5.0, event_index: 0 };
+    let on_off_times= (DateTime::parse_from_rfc2822("Thu Jan 01 1970 07:00:00 GMT+0100").unwrap().timestamp(),DateTime::parse_from_rfc2822("Thu Jan 01 1970 22:00:00 GMT+0100").unwrap().timestamp());
+    let mut display_on=true;
     loop {
+        if(!display_on){
+
+            continue
+        }
         canvas.fill(0, 0, 0);
 
         let time_now = Utc::now();
+        if time_now.timestamp()>= on_off_times.0 && time_now.timestamp() <= on_off_times.1{
+            display_on=true;
+        }else if time_now.timestamp()>=on_off_times.1 {
+            display_on=false;
+        }
+
         let time_str = time_now.with_timezone(&Berlin).format("%H\n%M\n%S").to_string();
         let clock = Text::new(
             time_str.as_str(),
@@ -113,14 +127,17 @@ async fn main() {
             blue_text_style,
         );
         calender_date.draw(canvas.as_mut()).unwrap();
+
         canvas = matrix.update_on_vsync(canvas);
+
         current_event.text_scroll -= 0.099;
         if current_event.text_scroll < -(last_response.1[current_event.event_index].title.chars().count() as i32 * 8) as f32 {
             current_event.text_scroll = 5.0;
             current_event.event_index += 1;
-            if  current_event.event_index >= last_response.1.len() {
+            if current_event.event_index >= last_response.1.len() {
                 current_event.event_index = 0;
             }
         }
+
     }
 }
