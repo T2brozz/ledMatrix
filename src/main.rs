@@ -18,10 +18,8 @@ mod calender;
 mod secrets;
 
 
-use std::io::Write;
 use chrono::{Timelike, Utc, Duration, TimeZone, Offset, NaiveTime, DateTime};
-use chrono::format::Item::Numeric;
-use chrono::format::Numeric::Timestamp;
+
 use chrono_tz::Europe::Berlin;
 use image::codecs::png::CompressionType::Default;
 use image::EncodableLayout;
@@ -53,8 +51,6 @@ async fn main() {
         row_setter: RowAddressSetterType::Direct,
         led_sequence: LedSequence::Gbr,
     };
-    let rows = config.rows as isize;
-    let cols = config.cols as isize;
     let (mut matrix, mut canvas) = RGBMatrix::new(config, 0).expect("Matrix initialization failed");
     let text_style = MonoTextStyle::new(&FONT_8X13, Rgb888::WHITE);
     let red_text_style = MonoTextStyle::new(&FONT_8X13, Rgb888::RED);
@@ -65,7 +61,7 @@ async fn main() {
          get_calender().await.expect("First try to get calender events failed")
         );
     let mut current_event = CurrentEvent { text_scroll: 5.0, event_index: 0 };
-    let on_off_times= (DateTime::parse_from_rfc2822("Thu Jan 01 1970 07:00:00 +0100").unwrap().timestamp(),DateTime::parse_from_rfc2822("Thu Jan 01 1970 22:00:00 +0100").unwrap().timestamp());
+    let on_off_times= (DateTime::parse_from_rfc2822("Tue, 1 Jul 2003 07:00:00 +0100").unwrap().timestamp() , DateTime::parse_from_rfc2822("Tue, 1 Jul 2003 22:00:00 +0100").unwrap().timestamp());
     let mut display_on=true;
     loop {
         if(!display_on){
