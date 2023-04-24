@@ -3,7 +3,7 @@ use chrono::format::Numeric::Timestamp;
 use minicaldav::{Calendar, Error, Event};
 use url::Url;
 use ureq::Agent;
-use crate::secrets::{CALENDER_USER, CALENDER_PASS};
+use crate::secrets::{CALENDER_USER, CALENDER_PASS,CALENDER_DAV_LINK};
 
 #[derive(Debug)]
 pub(crate) struct Simple_Event {
@@ -18,7 +18,7 @@ pub(crate) struct ParseCalenderEventError {
 
 pub(crate)  async fn get_calender() -> Result< Vec<Simple_Event> , ParseCalenderEventError>{
     let agent = Agent::new();
-    let url = Url::parse("https://dav.mailbox.org").unwrap();
+    let url = Url::parse(CALENDER_DAV_LINK).unwrap();
     let mut event_simplified = Vec::<Simple_Event>::new();
 
     let calendars = match minicaldav::get_calendars(agent.clone(), CALENDER_USER, CALENDER_PASS, &url) {
@@ -27,7 +27,7 @@ pub(crate)  async fn get_calender() -> Result< Vec<Simple_Event> , ParseCalender
     };
     let calendars = calendars.
         iter().
-        filter(|&cal| ["Calendar", "Birthdays"].contains(&&**cal.name()));
+        filter(|&cal| ["Personal", "Contact birthdays"].contains(&&**cal.name()));
     for calendar in calendars {
         let (mut events, errors) = match minicaldav::get_events(
             agent.clone(),
@@ -37,10 +37,9 @@ pub(crate)  async fn get_calender() -> Result< Vec<Simple_Event> , ParseCalender
             Ok(val) => {val}
             Err(e) => return Err(ParseCalenderEventError { details: e.to_string() })
         };
-
         events = match calendar.name().as_str() {
-            "Calendar" => sort_calender_events(events),
-            "Birthdays" => sort_birthdays(events),
+            "Personal" => sort_calender_events(events),
+            "Contact birthdays" => sort_birthdays(events),
             _ => events
         };
 
