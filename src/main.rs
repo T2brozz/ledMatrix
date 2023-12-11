@@ -67,7 +67,7 @@ async fn main() {
     let image_data = ImageRawBE::<Rgb888>::new(new_image.as_bytes(), 1_u32);
     let image = Image::new(
         &image_data,
-        Point::new(10, 10),
+        Point::new(20_i32, 30_i32),
     );
     loop {
         let time_now = Utc::now();
