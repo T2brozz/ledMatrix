@@ -21,7 +21,7 @@ mod secrets;
 use chrono::{Timelike, Utc, Duration, TimeZone, Offset, NaiveTime, DateTime};
 
 use chrono_tz::Europe::Berlin;
-use embedded_graphics::image::ImageRawLE;
+use embedded_graphics::image::{ImageRaw, ImageRawLE};
 use image::codecs::png::CompressionType::Default;
 use image::EncodableLayout;
 use image::imageops::FilterType;
@@ -64,10 +64,11 @@ async fn main() {
     let mut current_event = CurrentEvent { text_scroll: 5.0, event_index: 0 };
 
     let new_image = last_response.0.icon_img.thumbnail(26, 26);
-    let image_data = ImageRawLE::<Rgb888>::new(new_image.as_bytes(), 26_u32);
+
+    let image_data = ImageRaw::<Rgb888>::new(new_image.as_bytes(), 26_u32);
     let image = Image::new(
         &image_data,
-        Point::new(20_i32, 15_i32),
+        Point::new(20_i32, 10_i32),
     );
     loop {
         let time_now = Utc::now();
