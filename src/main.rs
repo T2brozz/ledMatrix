@@ -65,7 +65,7 @@ async fn main() {
 
     let new_image = last_response.0.icon_img;
 
-    let image_data = ImageRaw::<Rgb888>::new(new_image.as_bytes(), 26_u32);
+    let image_data = ImageRaw::<Rgb888>::new(new_image.as_rgb8().unwrap(), 26_u32);
     let image = Image::new(
         &image_data,
         Point::new(20_i32, 10_i32),
