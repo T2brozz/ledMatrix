@@ -64,8 +64,9 @@ async fn main() {
     let mut current_event = CurrentEvent { text_scroll: 5.0, event_index: 0 };
 
     let new_image = last_response.0.icon_img;
-
-    let image_data = ImageRaw::<Rgb888>::new(new_image.as_rgb8().unwrap(), 26_u32);
+    println!("{:?}", new_image.width());
+    println!("{:?}", new_image.as_rgb8().unwrap());
+    let image_data = ImageRaw::<Rgb888>::new(new_image.as_rgb8().unwrap(), new_image.width());
     let image = Image::new(
         &image_data,
         Point::new(20_i32, 10_i32),
