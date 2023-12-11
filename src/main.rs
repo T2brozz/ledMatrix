@@ -65,7 +65,7 @@ async fn main() {
 
     let new_image = last_response.0.icon_img;
     println!("{:?}", new_image.width());
-    println!("{:?}", new_image.as_bytes());
+    //println!("{:?}", new_image.as_bytes());
     new_image.save("a.jpg");
     let image_data = ImageRaw::<Rgb888>::new(new_image.as_bytes(), new_image.width());
     let image = Image::new(
@@ -100,7 +100,7 @@ async fn main() {
         temperature.draw(canvas.as_mut()).unwrap();
 
 
-        image.draw(canvas.as_mut()).unwrap();
+        //image.draw(canvas.as_mut()).unwrap();
 
         let calender_event = Text::new(
             &last_response.1[current_event.event_index].title,
