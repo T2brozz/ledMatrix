@@ -21,6 +21,7 @@ mod secrets;
 use chrono::{Timelike, Utc, Duration, TimeZone, Offset, NaiveTime, DateTime};
 
 use chrono_tz::Europe::Berlin;
+use embedded_graphics::image::ImageRawLE;
 use image::codecs::png::CompressionType::Default;
 use image::EncodableLayout;
 use image::imageops::FilterType;
@@ -88,11 +89,12 @@ async fn main() {
         );
         temperature.draw(canvas.as_mut()).unwrap();
         let new_image = last_response.0.icon_img.thumbnail(26, 26);
-        let image_data = ImageRawBE::<Rgb888>::new(new_image.as_bytes(), 1_u32);
+        let image_data = ImageRawLE::<Rgb888>::new(new_image.as_bytes(), 1_u32);
         let image = Image::new(
             &image_data,
             Point::new(10, 10),
         );
+
         image.draw(canvas.as_mut()).unwrap();
 
         let calender_event = Text::new(
