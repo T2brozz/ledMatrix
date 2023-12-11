@@ -62,7 +62,6 @@ async fn main() {
         );
     let mut current_event = CurrentEvent { text_scroll: 5.0, event_index: 0 };
     loop {
-
         let time_now = Utc::now();
 
         canvas.fill(0, 0, 0);
@@ -94,7 +93,7 @@ async fn main() {
             &image_data,
             Point::new(10, 10),
         );
-        //image.draw(canvas.as_mut()).unwrap();
+        image.draw(canvas.as_mut()).unwrap();
 
         let calender_event = Text::new(
             &last_response.1[current_event.event_index].title,
@@ -111,7 +110,11 @@ async fn main() {
         let calender_date = Text::new(
             date_string.as_str(),
             Point::new(12, 60_i32),
-            blue_text_style,
+            if last_response.1[current_event.event_index].birthday {
+                red_text_style
+            } else {
+                blue_text_style
+            },
         );
         calender_date.draw(canvas.as_mut()).unwrap();
 
@@ -125,6 +128,5 @@ async fn main() {
                 current_event.event_index = 0;
             }
         }
-
     }
 }
