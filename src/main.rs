@@ -62,6 +62,13 @@ async fn main() {
          get_calender().await.expect("First try to get calender events failed")
         );
     let mut current_event = CurrentEvent { text_scroll: 5.0, event_index: 0 };
+
+    let new_image = last_response.0.icon_img.thumbnail(26, 26);
+    let image_data = ImageRawLE::<Rgb888>::new(new_image.as_bytes(), 1_u32);
+    let image = Image::new(
+        &image_data,
+        Point::new(10, 10),
+    );
     loop {
         let time_now = Utc::now();
 
@@ -88,12 +95,7 @@ async fn main() {
             red_text_style,
         );
         temperature.draw(canvas.as_mut()).unwrap();
-        let new_image = last_response.0.icon_img.thumbnail(26, 26);
-        let image_data = ImageRawLE::<Rgb888>::new(new_image.as_bytes(), 1_u32);
-        let image = Image::new(
-            &image_data,
-            Point::new(10, 10),
-        );
+
 
         image.draw(canvas.as_mut()).unwrap();
 
