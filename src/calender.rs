@@ -48,7 +48,7 @@ pub(crate)  async fn get_calender() -> Result< Vec<SimpleEvent> , ParseCalenderE
             event_simplified.push(SimpleEvent {
                 title: event.get("SUMMARY").unwrap().to_string(),
                 date: parse_date_time(&event),
-                birthday: matches!(calendar.name().as_str(), "Birthdays"),
+                birthday: matches!(calendar.name().as_str(), "Contact birthdays"),
             })
         }
         if let Some(error) = errors.into_iter().next() {
