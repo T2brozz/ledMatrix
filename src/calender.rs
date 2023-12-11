@@ -6,7 +6,8 @@ use ureq::Agent;
 use crate::secrets::{CALENDER_USER, CALENDER_PASS,CALENDER_DAV_LINK};
 
 #[derive(Debug)]
-pub(crate) struct Simple_Event {
+#[derive(Clone)]
+pub(crate) struct SimpleEvent {
     pub title: String,
     pub date: NaiveDateTime,
     pub birthday: bool,
@@ -16,10 +17,10 @@ pub(crate) struct ParseCalenderEventError {
     details: String,
 }
 
-pub(crate)  async fn get_calender() -> Result< Vec<Simple_Event> , ParseCalenderEventError>{
+pub(crate)  async fn get_calender() -> Result< Vec<SimpleEvent> , ParseCalenderEventError>{
     let agent = Agent::new();
     let url = Url::parse(CALENDER_DAV_LINK).unwrap();
-    let mut event_simplified = Vec::<Simple_Event>::new();
+    let mut event_simplified = Vec::<SimpleEvent>::new();
 
     let calendars = match minicaldav::get_calendars(agent.clone(), CALENDER_USER, CALENDER_PASS, &url) {
         Ok(val) => val,
@@ -44,7 +45,7 @@ pub(crate)  async fn get_calender() -> Result< Vec<Simple_Event> , ParseCalender
         };
 
         for event in &events[..2] {
-            event_simplified.push(Simple_Event {
+            event_simplified.push(SimpleEvent {
                 title: event.get("SUMMARY").unwrap().to_string(),
                 date: parse_date_time(&event),
                 birthday: matches!(calendar.name().as_str(), "Birthdays"),
@@ -56,10 +57,11 @@ pub(crate)  async fn get_calender() -> Result< Vec<Simple_Event> , ParseCalender
         }
     }
     event_simplified = sort_simplified_events(event_simplified);
+    let event_simplified_two= &event_simplified[..2];
     /*for event in event_simplified  {
         println!("{:?}", event);
     }*/
-    Ok(event_simplified)
+    Ok(event_simplified_two.to_vec())
 }
 
 fn parse_date_time(event: &Event) -> NaiveDateTime {
@@ -104,7 +106,7 @@ fn sort_birthdays(mut events: Vec<Event>) -> Vec<Event> {
                 ev_date >= now_date
             }).collect()
 }
-fn sort_simplified_events(mut events: Vec<Simple_Event>) -> Vec<Simple_Event>{
+fn sort_simplified_events(mut events: Vec<SimpleEvent>) -> Vec<SimpleEvent>{
     events.sort_by(|ev1,ev2|{
         let ev1_date = NaiveDate::from_ymd_opt(0000, ev1.date.month(), ev1.date.day());
         let ev2_date = NaiveDate::from_ymd_opt(0000, ev2.date.month(), ev2.date.day());

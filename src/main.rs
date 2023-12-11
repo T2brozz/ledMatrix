@@ -1,5 +1,5 @@
 use std::{thread, time};
-use crate::calender::{get_calender, Simple_Event};
+use crate::calender::{get_calender, SimpleEvent};
 use crate::weather::{get_weather, ParseWeatherError, WeatherResponse};
 use rpi_led_panel::{Canvas, HardwareMapping, LedSequence, RGBMatrix, RGBMatrixConfig, RowAddressSetterType};
 use tokio::time::{sleep};
@@ -56,7 +56,7 @@ async fn main() {
     let red_text_style = MonoTextStyle::new(&FONT_8X13, Rgb888::RED);
     let blue_text_style = MonoTextStyle::new(&FONT_8X13, Rgb888::BLUE);
     let mut last_request_time = Utc::now().timestamp();
-    let mut last_response: (WeatherResponse, Vec<Simple_Event>) =
+    let mut last_response: (WeatherResponse, Vec<SimpleEvent>) =
         (get_weather().await.expect("First try to get weather data failed"),
          get_calender().await.expect("First try to get calender events failed")
         );
@@ -117,7 +117,7 @@ async fn main() {
 
         canvas = matrix.update_on_vsync(canvas);
 
-        current_event.text_scroll -= 0.099;
+        current_event.text_scroll -= 0.2;
         if current_event.text_scroll < -(last_response.1[current_event.event_index].title.chars().count() as i32 * 8) as f32 {
             current_event.text_scroll = 5.0;
             current_event.event_index += 1;
