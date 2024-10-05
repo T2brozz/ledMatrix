@@ -85,6 +85,15 @@ async fn main() {
             text_style,
         );
         clock.draw(canvas.as_mut()).unwrap();
+
+        let date_str = time_now.with_timezone(&Berlin).format("%d.%m").to_string();
+        let date = Text::new(
+            date_str.as_str(),
+            Point::new(20_i32, 10_i32),
+            text_style,
+        );
+        date.draw(canvas.as_mut()).unwrap();
+
         if last_request_time <= time_now.timestamp() - 15 * 60 {
             if let Ok(weather) = get_weather().await { last_response.0 = weather };
             if let Ok(events) = get_calender().await { last_response.1 = events };
@@ -99,8 +108,6 @@ async fn main() {
         );
         temperature.draw(canvas.as_mut()).unwrap();
 
-
-        //image.draw(canvas.as_mut()).unwrap();
 
         let calender_event = Text::new(
             &last_response.1[current_event.event_index].title,
