@@ -103,7 +103,7 @@ async fn main() {
         let temperature_string = format!("{:.1}C", last_response.0.temp);
         let temperature = Text::new(
             temperature_string.as_str(),
-            Point::new(20_i32, 20_i32),
+            Point::new(20_i32, 25_i32),
             red_text_style,
         );
         temperature.draw(canvas.as_mut()).unwrap();
